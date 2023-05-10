@@ -1,30 +1,61 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div
+    class="h-screen w-screen"
+    :class="$store.state.authUser.dark_mode == 1 ? 'dark-mode' : 'bg-gray-100'"
+  >
+    <Navbar />
+    <router-view />
+    <Footer />
+  </div>
 </template>
 
+<script>
+import Navbar from "./components/layouts/Navbar.vue";
+import Footer from "./components/layouts/Footer.vue";
+import axios from "axios";
+
+export default {
+  components: {
+    Navbar,
+    Footer,
+  },
+
+  mounted() {
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${localStorage.getItem("token")}`;
+
+    setTimeout(() => {
+      this.$store.state.isPageLoading = false;
+    }, 2000);
+  },
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.dark-mode {
+  background-color: #202020;
+}
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
