@@ -86,7 +86,7 @@
       </div>
       <div
         v-show="isShow"
-        class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0"
+        class="absolute z-50 mt-2 w-44 rounded-md shadow-lg origin-top-right right-0 pop"
       >
         <div class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white">
           <div class="block px-4 py-2 text-xs text-gray-400">
@@ -181,5 +181,16 @@ export default {
 }
 .dark-mode {
   background-color: #121212;
+}
+@keyframes pop {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+.pop {
+  animation: pop 0.5s ease-in-out forwards;
 }
 </style>

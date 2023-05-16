@@ -1,5 +1,8 @@
 <template>
-  <div v-show="!toggleSearchShow" class="h-fit py-6 flex justify-center">
+  <div
+    v-show="!$store.state.toggleSearchShow"
+    class="h-fit py-6 flex justify-center"
+  >
     <ul class="w-10/12">
       <span
         :class="
@@ -20,7 +23,9 @@
               ? ' hover:py-1 hover:px-4 '
               : 'hover:bg-gray-100 hover:rounded-full hover:py-1 hover:px-4 '
           "
-          @click="userChat(sender.chat_id), (toggleSearchShow = false)"
+          @click="
+            userChat(sender.chat_id), ($store.state.toggleSearchShow = false)
+          "
         >
           <div>
             <span
@@ -47,7 +52,9 @@
               ? ' hover:py-1 hover:px-4 '
               : 'hover:bg-gray-100 hover:rounded-full hover:py-1 hover:px-4 '
           "
-          @click="userChat(recepient.user_id), (toggleSearchShow = false)"
+          @click="
+            userChat(recepient.user_id), ($store.state.toggleSearchShow = false)
+          "
         >
           <div>
             <span
@@ -76,13 +83,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState([
-      "authUser",
-      "userRecepient",
-      "userSender",
-      "toggleDeleteModal",
-      "toggleSearchShow",
-    ]),
+    ...mapState(["authUser", "userRecepient", "userSender"]),
   },
   methods: {
     userChat(id) {
@@ -92,12 +93,12 @@ export default {
         })
         .then((response) => {
           this.$store.dispatch("fetchChatUser", id);
-          this.toggleDeleteModal = false;
+          this.$store.state.toggleDeleteModal = false;
         })
         .catch((error) => {
           if (error.response.status == 409) {
             this.$store.dispatch("fetchChatUser", id);
-            this.toggleDeleteModal = false;
+            this.$store.state.toggleDeleteModal = false;
           } else if (error.response.status == 401) {
             localStorage.removeItem("token");
             window.location.href = "/login";

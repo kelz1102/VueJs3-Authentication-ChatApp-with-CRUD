@@ -1,5 +1,8 @@
 <template>
-  <div v-show="toggleSearchShow" class="h-fit py-6 flex justify-center">
+  <div
+    v-show="$store.state.toggleSearchShow"
+    class="h-fit py-6 flex justify-center"
+  >
     <ul class="w-10/12">
       <span
         :class="
@@ -20,7 +23,7 @@
             ? ' hover:py-1 hover:px-4 '
             : 'hover:bg-gray-100 hover:rounded-full hover:py-1 hover:px-4 '
         "
-        @click="userChat(user.id), (toggleSearchShow = false)"
+        @click="userChat(user.id), ($store.state.toggleSearchShow = false)"
       >
         <div>
           <span
@@ -48,12 +51,7 @@ import { mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState([
-      "authUser",
-      "toggleSearchShow",
-      "searchedShow",
-      "searchedUser",
-    ]),
+    ...mapState(["authUser", "searchedShow", "searchedUser"]),
   },
   methods: {
     userChat(id) {
@@ -63,12 +61,12 @@ export default {
         })
         .then((response) => {
           this.$store.dispatch("fetchChatUser", id);
-          this.toggleDeleteModal = false;
+          this.$store.state.toggleDeleteModal = false;
         })
         .catch((error) => {
           if (error.response.status == 409) {
             this.$store.dispatch("fetchChatUser", id);
-            this.toggleDeleteModal = false;
+            this.$store.state.toggleDeleteModal = false;
           } else if (error.response.status == 401) {
             localStorage.removeItem("token");
             window.location.href = "/login";
